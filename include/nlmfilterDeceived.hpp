@@ -1,0 +1,27 @@
+/*
+ * nlmfilterDeceived.h
+ *
+ *  Created on: Jun 20, 2016
+ *      Author: davidp, manzumbado
+ */
+
+#ifndef NLMFILTERDECEIVED_H_
+#define NLMFILTERDECEIVED_H_
+
+#include <iostream>
+#include <omp.h>
+#include "tools.hpp"
+
+using namespace cv;
+using namespace std;
+
+class NLMFilterDeceived{
+
+public:
+	Mat nlmfilterDeceived(const Mat& A, const Mat& L, int w, double sigma_s, int sigma_r);
+
+private:
+	Mat nlmfilBW_deceived(const Mat& A, const Mat& L, int w, double sigma_d, int sigma_r);
+	Mat nlmfltBWDeceived(const Mat& A, const Mat& L, int w, double sigma_d, int sigma_r);
+};
+#endif /* NLMFILTERDECEIVED_H_ */

@@ -9,7 +9,7 @@
 #include "nlmfilterDeceived.hpp"
 
 // Pre-process input and select appropriate filter.
-Mat NLMFilterDeceived::nlmfilterDeceived(const Mat& A, const Mat& L, int w, double sigma_s, int sigma_r){
+Mat NLMFilterDeceived::nlmfilterDeceived(const Mat& A, const Mat& L, int w, int w_n, double sigma_s, int sigma_r){
 	double minA, maxA;
 	Tools::minMax(A,&minA,&maxA);
 	int type = A.type();
@@ -22,7 +22,7 @@ Mat NLMFilterDeceived::nlmfilterDeceived(const Mat& A, const Mat& L, int w, doub
 	Mat B;
     if (type == CV_32FC3 )
        //B = bfltColorDeceived(A, L, w, sigma(1),sigma(2));//?????????????????
-    	B = this->nlmfltBWDeceived(A, L, w, sigma_s, sigma_r);
+    	B = this->nlmfltBWDeceived(A, L, w, w_n, sigma_s, sigma_r);
     else
     	;
     return B;
@@ -30,7 +30,7 @@ Mat NLMFilterDeceived::nlmfilterDeceived(const Mat& A, const Mat& L, int w, doub
 
 //Implements bilateral filter for color images.
 //sigma range is multiplied by 100
-Mat NLMFilterDeceived::nlmfltBWDeceived(const Mat& A, const Mat& L, int w, double sigma_d, int sigma_r){
+Mat NLMFilterDeceived::nlmfltBWDeceived(const Mat& A, const Mat& L, int w, int w_n, double sigma_d, int sigma_r){
 	Mat B,C,D;
 
     //Convert input BGR image to CIELab color space.
@@ -39,15 +39,16 @@ Mat NLMFilterDeceived::nlmfltBWDeceived(const Mat& A, const Mat& L, int w, doubl
     cvtColor(A,B,CV_BGR2Lab);
 
     //L =  filterUM_laplacianLAB(A, lambda);
-    C = this->nlmfilBW_deceived(B, L, w, sigma_d,sigma_r);
+    C = this->nlmfilBW_deceived(B, L, w, w_n, sigma_d,sigma_r);
 
     //Convert filtered image back to sRGB color space.
     cvtColor(C,D,CV_Lab2BGR);
+    Tools::showImg(D);
 
     return D;
 }
 
-Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int w, double sigma_d, int sigma_r){
+Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int w, int w_n, double sigma_d, int sigma_r){
     int iMin, iMax, jMin, jMax;
     Mat B, F, G, H, I, L, S, dL;
 	Mat1i X,Y;
@@ -100,5 +101,8 @@ Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int
              B.at<Vec3f>(i,j)[0] = (sum(sum(F.mul(channels[0])))/norm_F).val[0];
        }
     }
+    split(Laplacian,channels);
+    Tools::showImg(channels[0]);
     return B;
+
 }

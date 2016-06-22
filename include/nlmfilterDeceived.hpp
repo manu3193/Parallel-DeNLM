@@ -18,10 +18,10 @@ using namespace std;
 class NLMFilterDeceived{
 
 public:
-	Mat nlmfilterDeceived(const Mat& A, const Mat& L, int w, double sigma_s, int sigma_r);
+	Mat nlmfilterDeceived(const Mat& A, const Mat& L, int w, int w_n, double sigma_s, int sigma_r);
 
 private:
-	Mat nlmfilBW_deceived(const Mat& A, const Mat& L, int w, double sigma_d, int sigma_r);
-	Mat nlmfltBWDeceived(const Mat& A, const Mat& L, int w, double sigma_d, int sigma_r);
+	Mat nlmfilBW_deceived(const Mat& A, const Mat& L, int w, int w_n, double sigma_d, int sigma_r);
+	Mat nlmfltBWDeceived(const Mat& A, const Mat& L, int w, int w_n, double sigma_d, int sigma_r);
 };
 #endif /* NLMFILTERDECEIVED_H_ */

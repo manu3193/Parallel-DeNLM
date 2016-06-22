@@ -25,7 +25,6 @@ private:
 	BFilterDeceived bfd;
 	NLMFilterDeceived nlmfd;
 
-	Mat filterDeceivedBilateral(const Mat& U, int wSize, double sigma_s, int sigma_r, int lambda);
 	Mat filterDeceivedNLM(const Mat& U, int wSize, int wSize_n, double sigma_s, int sigma_r, int lambda);
 };
 #endif /* PARALLELDEWAFF_HPP_ */

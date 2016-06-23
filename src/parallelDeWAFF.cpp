@@ -10,9 +10,9 @@ using namespace std;
   
 
 int main(int argc, char* argv[]){
-	ParallelDeWAFF deWAFF;
+    ParallelDeWAFF deWAFF;
 
-	//Check input arguments
+    //Check input arguments
     if (argc != 2){
         cout << "ERROR: Not enough parameters" << endl;
         deWAFF.help();
@@ -21,39 +21,39 @@ int main(int argc, char* argv[]){
 
     //Open input video file
     const string inputFile = argv[1];
-	// Find extension point
+    // Find extension point
     string::size_type pAt = inputFile.find_last_of('.');
 
     // Form the new name with container
     const string outputFile = inputFile.substr(0, pAt) + "_DeNLM.jpg";
 
-	//Create the Laplacian of Gaussian mask once
+    //Create the Laplacian of Gaussian mask once
     NoAdaptiveLaplacian* nAL = deWAFF.getNAL();
     Mat h =  Tools::fspecialLoG(17, 0.005);
     nAL->setMask(-h);
     clock_t begin = clock();
-	Mat U,F1;
+    Mat U,F1;
     U = imread(inputFile, CV_LOAD_IMAGE_COLOR);
-	//Read one frame from input video
-		if(!U.data){
-			cout << "Could not read image from file." << endl;
-			return -1;
-		}
-    	//time start
-		F1 = deWAFF.processImage(U);
-		//time end
+    //Read one frame from input video
+        if(!U.data){
+            cout << "Could not read image from file." << endl;
+            return -1;
+        }
+        //time start
+        F1 = deWAFF.processImage(U);
+        //time end
 
-	//Write image to output file.
+    //Write image to output file.
     imwrite(outputFile, F1);
     clock_t end = clock();
-  	double elapsed_secs =  ((double) (end - begin)) / CLOCKS_PER_SEC;
+    double elapsed_secs =  ((double) (end - begin)) / CLOCKS_PER_SEC;
     cout << "Time to process an image: "  << elapsed_secs << endl;
-	return 0;
+    return 0;
     }
 }
 
 NoAdaptiveLaplacian* ParallelDeWAFF::getNAL(){
-	return &(this->nal);
+    return &(this->nal);
 }
 
 void ParallelDeWAFF::help(){

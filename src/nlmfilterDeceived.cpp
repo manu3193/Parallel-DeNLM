@@ -51,10 +51,11 @@ Mat NLMFilterDeceived::nlmfltBWDeceived(const Mat& A, const Mat& L, int w, int w
 Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int w, int w_n, double sigma_d, int sigma_r){
     int iMin, iMax, jMin, jMax;
     Mat B, F, G, H, I, L, S, E;
-    Mat1i X,Y;
-    vector<Mat> channels(3);
-    Vec3f pixel;
-    double norm_F;
+
+	Mat1i X,Y;
+	vector<Mat> channels(3);
+	Vec3f pixel;
+	double norm_F;
 
     //Pre-compute Gaussian domain weights.
     Tools::meshgrid(Range(-w,w),Range(-w,w),X,Y);
@@ -71,7 +72,7 @@ Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int
     B = Mat::zeros(A.size(),A.type());
     cout << "Applying the deceived bilateral filter..." << endl;
     
-    //#pragma omp parallel for private(I,iMin,iMax,jMin,jMax,pixel,E,channels,H,F,norm_F,L) shared(A,B,G,Laplacian,w,sigma_d,sigma_r)
+	//#pragma omp parallel for private(I,iMin,iMax,jMin,jMax,pixel,E,channels,H,F,norm_F,L) shared(A,B,G,Laplacian,w,sigma_d,sigma_r)
     for(int i = 1; i < A.rows-1; i++){
        for(int j = 1; j < A.cols-1; j++){
 

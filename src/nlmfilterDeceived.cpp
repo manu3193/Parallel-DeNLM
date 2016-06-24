@@ -151,7 +151,7 @@ Mat NLMFilterDeceived::CalcEuclideanDistMat(const Mat& I, int w_n, int i, int j)
     //Vectorized neighborhood
     //v_z.assign((float*)Z.datastart, (float*)Z.dataend);
     //Create output Mat
-     E.create(size_x-w_n,size_y-w_n, DataType<float>::type);
+    E.create(size_x-w_n,size_y-w_n, DataType<float>::type);
 
      //Visit each pixel in the window I
      for(int n=1; n<size_x-2; n++){

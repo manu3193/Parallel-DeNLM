@@ -135,21 +135,21 @@ Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int
 
 Mat NLMFilterDeceived::CalcEuclideanDistMat(const Mat& I, int w_n, int i, int j){
     int nMin_w, nMax_w, mMin_w, mMax_w, nMin_z, nMax_z, mMin_z, mMax_z;
-    Mat Z, W, O, T, I_b;
+    Mat Z, W, O, T;
     int size_x,size_y; //Window dimensions
 
     //NLM------------------------------------------------------------------------
     size_x=I.rows;
     size_y=I.cols;
-    copyMakeBorder(I, I_b, 0, 2, 0, 2, BORDER_REPLICATE, 0);
+    //copyMakeBorder(I, I_b, 0, 2, 0, 2, BORDER_REPLICATE, 0); //No sirve
     //Extract pixel z neighborhood local region.
     nMin_z = max(i - w_n,0);
-    nMax_z = min(i + w_n,I_b.rows-1);
+    nMax_z = min(i + w_n,I.rows-1);
     mMin_z = max(j - w_n,0);
-    mMax_z = min(j + w_n,I_b.cols-1);
+    mMax_z = min(j + w_n,I.cols-1);
 
     //Current Pixel z neighborhood
-    Z= I_b(Range(nMin_z,nMax_z+1),Range(mMin_z,mMax_z+1));
+    Z= I(Range(nMin_z,nMax_z+1),Range(mMin_z,mMax_z+1));
     cout << "i = "<< endl << " "  << i << endl << "j" << " " << j << endl;
     cout << "nMin_z = "<< endl << " "  << nMin_z << endl << "nMax_z" << " " << nMax_z << endl;
     cout << "mMin_z = "<< endl << " "  << mMin_z << endl << "mMax_z" << " " << mMax_z << endl;

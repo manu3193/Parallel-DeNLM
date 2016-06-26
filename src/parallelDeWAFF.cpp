@@ -71,7 +71,7 @@ Mat ParallelDeWAFF::processImage(const Mat& U){
     int wRSize = 21;
     int wSize_n=1;
     double sigma_s = wRSize/1.5;
-    int sigma_r = 13;
+    int sigma_r = 3; //13
     int lambda = 1.7;
 
     Mat fDeceivedNLM = filterDeceivedNLM(U, wRSize, wSize_n, sigma_s, sigma_r, lambda);

@@ -77,7 +77,7 @@ Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int
     for(int i = 0; i < A.rows-1; i++){
        for(int j = 0; j < A.cols-1; j++){
 
-
+           float val; //result value
              //Extract local region.
              iMin = max(i - w - w_n,0);
              iMax = min(i + w + w_n,A.rows-1);
@@ -85,11 +85,10 @@ Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int
              jMax = min(j + w + w_n,A.cols-1);
 
              I = A(Range(iMin,iMax), Range(jMin,jMax));
-
              x_size=I.rows;
              y_size=I.cols;
              //compare window ranges 
-             if(x_size==y_size){
+             if((i>=w+w_n) && (j>=w+w_n) && (i<=A.rows-1-w-w_n) && (j<=A.cols-1-w-w_n)){
 
                 //Compute Gaussian range weights.
                 //done in the three layers
@@ -108,7 +107,7 @@ Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int
 
                  cout << "G = "<< endl << " "  << G(Range(iMin-i+w+w_n, iMax-i+w-w_n), Range(jMin-j+w+w_n, jMax-j+w-w_n)).rows << " "<< G(Range(iMin-i+w+w_n, iMax-i+w-w_n), Range(jMin-j+w+w_n, jMax-j+w-w_n)).cols << endl << endl;
 
-
+                 //if()
 
                  //Calculate NLM filter response.
                  F = H.mul(G(Range(iMin-i+w+w_n, iMax-i+w-w_n), Range(jMin-j+w+w_n, jMax-j+w-w_n)));
@@ -118,59 +117,78 @@ Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int
                  //the original image, and using the image values of the laplacian image.
                  L = Laplacian(Range(iMin+w_n,iMax-w_n), Range(jMin+w_n,jMax-w_n));
                  split(L,channels);
+                 val =(sum(sum(F.mul(channels[0])))/norm_F).val[0];
 
-                 }
+             }else{
+                 val=0;
+             }
 
                  
-                 B.at<Vec3f>(i,j)[0] = (sum(sum(F.mul(channels[0])))/norm_F).val[0];
+                 B.at<Vec3f>(i,j)[0] = val;
        }
     }
     split(Laplacian,channels);
-    Tools::showImg(channels[0]);
+    Tools::showImg(B);
     return B;
 
 }
 
 Mat NLMFilterDeceived::CalcEuclideanDistMat(const Mat& I, int w_n, int i, int j){
     int nMin_w, nMax_w, mMin_w, mMax_w, nMin_z, nMax_z, mMin_z, mMax_z;
-    Mat Z, W, E;
+    Mat Z, W, O, T, I_b;
     int size_x,size_y; //Window dimensions
 
     //NLM------------------------------------------------------------------------
     size_x=I.rows;
     size_y=I.cols;
+    copyMakeBorder(I, I_b, 0, 2, 0, 2, BORDER_REPLICATE, 0);
     //Extract pixel z neighborhood local region.
     nMin_z = max(i - w_n,0);
-    nMax_z = min(i + w_n,I.rows-1);
-    mMin_z = max(j + w_n,0);
-    mMax_z = min(j + w_n,I.cols-1);
+    nMax_z = min(i + w_n,I_b.rows-1);
+    mMin_z = max(j - w_n,0);
+    mMax_z = min(j + w_n,I_b.cols-1);
 
     //Current Pixel z neighborhood
-    Z= I(Range(nMin_z,nMax_z),Range(mMin_z,mMax_z));
+    Z= I_b(Range(nMin_z,nMax_z+1),Range(mMin_z,mMax_z+1));
+    cout << "i = "<< endl << " "  << i << endl << "j" << " " << j << endl;
+    cout << "nMin_z = "<< endl << " "  << nMin_z << endl << "nMax_z" << " " << nMax_z << endl;
+    cout << "mMin_z = "<< endl << " "  << mMin_z << endl << "mMax_z" << " " << mMax_z << endl;
     cout << "Z = "<< endl << " "  << Z << endl << endl;
     //Vectorized neighborhood
     //v_z.assign((float*)Z.datastart, (float*)Z.dataend);
     //Create output Mat
-    E.create(size_x-w_n,size_y-w_n, DataType<float>::type);
+    O.create(size_x-2*w_n,size_y-2*w_n, DataType<float>::type);
 
      //Visit each pixel in the window I
      for(int n=1; n<size_x-2; n++){
          for(int m=1; m<size_y-2; m++){
 
             //Extract pixel w neighborhood local region.
-             nMin_w = max(n - w_n,0);
-             nMax_w = min(n + w_n,I.rows-1);
-             mMin_w = max(m + w_n,0);
-             mMax_w = min(m + w_n,I.cols-1);
+            nMin_w = max(n - w_n,0);
+            nMax_w = min(n + w_n,I.rows-1);
+            mMin_w = max(m - w_n,0);
+            mMax_w = min(m + w_n,I.cols-1);
             //Get pixel mini-window
-            W = I(Range(n-w_n,n+w_n), Range(m-w_n,m+w_n));
+            W = I(Range(nMin_w,nMax_w+1), Range(mMin_w,mMax_w+1));
             cout << "W = "<< endl << " "  << W << endl << endl;
             //vectorized neighborhood
             //v_w.assign((float*)W.datastart, (float*)W.dataend);
+            float res;
 
-            cout << "dist = "<< endl << " "  << (float) norm(Z,W,NORM_L2)  << endl;
-            E.at<float>(n-1,m-1) = (float) norm(Z,W,NORM_L2);
+            if(W.size()==Z.size()){
+                res=(float) norm(Z,W,NORM_L2);
+                cout << "dist = "<< endl << " "  << (float) norm(Z,W,NORM_L2)  << endl;
+            } else {
+                res = -1;
+            }
+
+            O.at<float>(n-w_n,m-w_n) = res;
          }
      }
-    return E;
+     cout << "O = "<< endl << " "  << O << endl << endl;
+     //T=E(Range(w_n,size_x-w_n), Range(w_n, size_y-w_n));
+     //E=repeat(T,2,2);
+     //E=E(Range(0,size_x-1),Range(0,size_y-1));
+     //cout << "Ef = "<< endl << " "  << E << endl << endl;
+    return O;
 }

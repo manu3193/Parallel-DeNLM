@@ -95,6 +95,6 @@ Mat ParallelDeWAFF::filterDeceivedNLM(const Mat& U, int wSize, int wSize_n, doub
 
     //putting back everything
     F.convertTo(F,CV_8UC1,255);
-    Tools::showImg(F);
+    //Tools::showImg(F);
     return F;
 }

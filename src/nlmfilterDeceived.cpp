@@ -43,7 +43,7 @@ Mat NLMFilterDeceived::nlmfltBWDeceived(const Mat& A, const Mat& L, int w, int w
 
     //Convert filtered image back to sRGB color space.
     cvtColor(C,D,CV_Lab2BGR);
-    Tools::showImg(D);
+    //Tools::showImg(D);
 
     return D;
 }
@@ -68,7 +68,7 @@ Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int
     exp(S,G);
 
     //Apply bilateral filter.
-    omp_set_num_threads(4);
+    omp_set_num_threads(16);
     B = Mat::zeros(A.size(),A.type());
     cout << "Applying the deceived nlm filter..." << endl;
     

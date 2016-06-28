@@ -2,10 +2,10 @@
 # created by manzumbado
 # Benchmark runner
 
-repeats=11
+repeats=3
 output_file='Benchmark_results.txt'
 program='./mycc'
-image_file='B7_02_1_1_DAPI_001.png'
+image_file='480p.jpg'
 
 run_tests() {
     local command_to_run+="$program $image_file"
@@ -33,9 +33,9 @@ run_tests() {
         echo -ne ${l}' ('${p}'%) \r'
 	echo "$i"
     done;
-
+    echo 'Times = ' ${time_array[*]} >> $output_file
     local average_time=$( IFS="+"; bc <<< "${time_array[*]}" )
-    echo 'Averaage execution time= ' $average_time >> $output_file
+    echo 'Averaage execution time= ' echo "$average_time /($repeats )" | bc -l >> $output_file
     echo -ne '\n'
 
     # Convenience seperator for file

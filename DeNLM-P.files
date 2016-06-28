@@ -1,5 +1,0 @@
-src/bfilterDeceived.cpp
-src/nlmfilterDeceived.cpp
-src/noAdaptiveLaplacian.cpp
-src/parallelDeWAFF.cpp
-src/tools.cpp

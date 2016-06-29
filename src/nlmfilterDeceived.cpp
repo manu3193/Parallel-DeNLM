@@ -68,9 +68,9 @@ Mat NLMFilterDeceived::nlmfilBW_deceived(const Mat& A, const Mat& Laplacian, int
     exp(S,G);
 
     //Apply bilateral filter.
-    omp_set_num_threads(16);
+    omp_set_num_threads(32);
     B = Mat::zeros(A.size(),A.type());
-    cout << "Applying the deceived nlm filter..." << endl;
+    //cout << "Applying the deceived nlm filter..." << endl;
     
     #pragma omp parallel for private(I,iMin,iMax,jMin,jMax/*,pixel*/,E,channels,H,F,norm_F,L) shared(A,B,G,Laplacian,w,sigma_d,sigma_r)
     for(int i = 0; i < A.rows-1; i++){

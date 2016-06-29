@@ -34,8 +34,9 @@ run_tests() {
 	echo "$i"
     done;
     echo 'Times = ' ${time_array[*]} #>> $output_file
-    local average_time=$( IFS="+"; bc <<< "${time_array[*]}" )
-    echo 'Averaage execution time= ' echo "$average_time /($repeats )" | bc -l >> $output_file
+    local sum_time=$( IFS="+"; bc <<< "${time_array[*]}" )
+    echo 'Average time= '>> $output_file
+    echo "$sum_time / $repeats" | bc -l >> $output_file
     echo -ne '\n'
 
     # Convenience seperator for file

@@ -35,7 +35,7 @@ Mat NLMFilterDeceived::nlmfltBWDeceived(const Mat& A, const Mat& L, int w, int w
 
     //Convert input BGR image to CIELab color space.
     //CIELab 'a' and 'b' values go from -127 to 127
-    cout << "Using the CIELab color space." << endl;
+    // cout << "Using the CIELab color space." << endl;
     cvtColor(A,B,CV_BGR2Lab);
 
     //L =  filterUM_laplacianLAB(A, lambda);

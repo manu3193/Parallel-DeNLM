@@ -33,7 +33,7 @@ run_tests() {
         echo -ne ${l}' ('${p}'%) \r'
 	echo "$i"
     done;
-    echo 'Times = ' ${time_array[*]} >> $output_file
+    echo 'Times = ' ${time_array[*]} #>> $output_file
     local average_time=$( IFS="+"; bc <<< "${time_array[*]}" )
     echo 'Averaage execution time= ' echo "$average_time /($repeats )" | bc -l >> $output_file
     echo -ne '\n'

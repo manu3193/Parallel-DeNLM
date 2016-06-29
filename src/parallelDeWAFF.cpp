@@ -31,7 +31,7 @@ int main(int argc, char* argv[]){
     NoAdaptiveLaplacian* nAL = deWAFF.getNAL();
     Mat h =  Tools::fspecialLoG(17, 0.005);
     nAL->setMask(-h);
-    clock_t begin = clock();
+    //clock_t begin = clock();
     Mat U,F1;
     U = imread(inputFile, CV_LOAD_IMAGE_COLOR);
     //Read one frame from input video
@@ -45,9 +45,9 @@ int main(int argc, char* argv[]){
 
     //Write image to output file.
     imwrite(outputFile, F1);
-    clock_t end = clock();
-    double elapsed_secs =  ((double) (end - begin)) / CLOCKS_PER_SEC;
-    cout << "Time to process an image: "  << elapsed_secs << endl;
+    // clock_t end = clock();
+    //double elapsed_secs =  ((double) (end - begin)) / CLOCKS_PER_SEC;
+    //cout << "Time to process an image: "  << elapsed_secs << endl;
     return 0;
     }
 }

@@ -31,7 +31,6 @@ int main(int argc, char* argv[]){
     NoAdaptiveLaplacian* nAL = deWAFF.getNAL();
     Mat h =  Tools::fspecialLoG(17, 0.005);
     nAL->setMask(-h);
-    //clock_t begin = clock();
     Mat U,F1;
     U = imread(inputFile, CV_LOAD_IMAGE_COLOR);
     //Read one frame from input video
@@ -40,12 +39,13 @@ int main(int argc, char* argv[]){
             return -1;
         }
         //time start
+        //clock_t begin = clock();
         F1 = deWAFF.processImage(U);
+        //clock_t end = clock();
         //time end
 
     //Write image to output file.
     imwrite(outputFile, F1);
-    // clock_t end = clock();
     //double elapsed_secs =  ((double) (end - begin)) / CLOCKS_PER_SEC;
     //cout << "Time to process an image: "  << elapsed_secs << endl;
     return 0;
@@ -75,8 +75,6 @@ Mat ParallelDeWAFF::processImage(const Mat& U){
     int lambda = 1.7;
 
     Mat fDeceivedNLM = filterDeceivedNLM(U, wRSize, wSize_n, sigma_s, sigma_r, lambda);
-    //Mat fBilD = filterDeceivedBilateral(U, wRSize, sigma_s, sigma_r, lambda);
-    //Mat fBilD = filterDGF(lambda, wRSize, 1, sigma_r, U);
 
     return fDeceivedNLM;
 }
@@ -84,8 +82,6 @@ Mat ParallelDeWAFF::processImage(const Mat& U){
 //Input image must be from 0 to 255
 Mat ParallelDeWAFF::filterDeceivedNLM(const Mat& U, int wSize, int wSize_n, double sigma_s, int sigma_r, int lambda){
     Mat Unorm;
-    //convert to grayscale
-    //cvtColor(U, grey, CV_BGR2GRAY);
     //The image has to have values from 0 to 1
     U.convertTo(Unorm,CV_32FC3,1.0/255.0);
     //[L, alfaMat, Vnorm] = adaptiveLaplacian(Unorm, amps, trap1, trap2);
@@ -95,6 +91,5 @@ Mat ParallelDeWAFF::filterDeceivedNLM(const Mat& U, int wSize, int wSize_n, doub
 
     //putting back everything
     F.convertTo(F,CV_8UC1,255);
-    //Tools::showImg(F);
     return F;
 }

@@ -2,10 +2,10 @@
 # created by manzumbado
 # Benchmark runner
 
-repeats=3
+repeats=11
 output_file='Benchmark_results.txt'
 program='./mycc'
-image_file='480p.jpg'
+image_file='1.png'
 
 run_tests() {
     local command_to_run+="$program $image_file"

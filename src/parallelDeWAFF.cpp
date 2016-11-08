@@ -1,8 +1,8 @@
 /*
  * main.cpp
  *
- *  Created on: Oct 27, 2015
- *      Author: davidp
+ *  Modified on: Nov 07, 2016
+ *      Authors: manzumbado, davidp
  */
 #include "parallelDeWAFF.hpp"
 #include <ctime>

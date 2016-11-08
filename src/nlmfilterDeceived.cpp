@@ -2,7 +2,7 @@
  * nlmfilterDeceived.cpp
  *
  *  Created on: Jun 20, 2016
- *      Author: davidp, manzumbado
+ *      Authors: davidp, manzumbado
  */
 
 
